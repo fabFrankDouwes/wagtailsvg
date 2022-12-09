@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 
 from wagtail.search import index
+from wagtail.models import ReferenceIndex
 
 from wagtailsvg.signals import svg_saved
 

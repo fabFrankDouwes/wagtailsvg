@@ -64,11 +64,11 @@ class Svg(CollectionMember, index.Indexed, models.Model):
          update_fields=None):
 
 
-    super().save(force_insert=force_insert, force_update=force_update, using=using,
+        super().save(force_insert=force_insert, force_update=force_update, using=using,
                  update_fields=update_fields)
 
-    # send a signal to bust all cache
-    svg_saved.send(sender=self.__class__, instance=self)
+        # send a signal to bust all cache
+        svg_saved.send(sender=self.__class__, instance=self)
     
     @property
     def filename(self):

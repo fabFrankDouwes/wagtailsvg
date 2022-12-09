@@ -5,6 +5,8 @@ from django.conf import settings
 
 from wagtail.search import index
 
+from wagtailsvg.signals import svg_saved
+
 try:
     from wagtail.models import CollectionMember
     from wagtail.admin.panels import TabbedInterface
@@ -54,6 +56,20 @@ class Svg(CollectionMember, index.Indexed, models.Model):
     def __str__(self):
         return self.title
 
+    # check where this page has been used
+    def get_usage(self):
+        return ReferenceIndex.get_references_to(self).group_by_source_object()
+    
+    def save(self, force_insert=False, force_update=False, using=None,
+         update_fields=None):
+
+
+    super().save(force_insert=force_insert, force_update=force_update, using=using,
+                 update_fields=update_fields)
+
+    # send a signal to bust all cache
+    svg_saved.send(sender=self.__class__, instance=self)
+    
     @property
     def filename(self):
         return os.path.basename(self.file.name)
